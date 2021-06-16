@@ -45,6 +45,16 @@ const Comment = ({ author, timestamp, id, body }) => (
   </div>
 );
 
+function findAllByKey(obj, keyToFind) {
+  return Object.entries(obj)
+    .reduce((acc, [key, value]) => (key === keyToFind)
+      ? acc.concat(value)
+      : (typeof value === 'object')
+      ? acc.concat(findAllByKey(value, keyToFind))
+      : acc
+    , [])
+}
+
 function App() {
   const [body, setBody] = useState("");
   const [author, setAuthor] = useState("");
@@ -54,15 +64,19 @@ function App() {
 
   const refreshPosts = useCallback(async () => {
     try {
-      const {
-        leaf: { keyvals: values },
-      } = (await blog.readAll());
+      const response = (await blog.readAll());
 
-      const posts = fromList(values).map((a) => {
-        const post = a[1]; // steak sauce
-        return { ...post, id: a[0].key };
+      const valuesList = findAllByKey(response, 'leaf');
+
+      const postsList = valuesList.map(v => v.keyvals).map((values) => {
+        return fromList(values).map((a) => {
+          const post = a[1]; // steak sauce
+          return { ...post, id: a[0].key };
+
+        });
       });
 
+      const posts = [].concat.apply([], postsList);
       posts.reverse();
       setPosts(posts);
     } catch (e) {
