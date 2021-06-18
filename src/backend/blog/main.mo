@@ -2,6 +2,7 @@ import List "mo:base/List";
 import Option "mo:base/Option";
 import Trie "mo:base/Trie";
 import Time "mo:base/Time";
+import Cycles "mo:base/ExperimentalCycles";
 
 actor {
   public type BlogId = Nat32;
@@ -51,5 +52,16 @@ actor {
 
   private func key(x : BlogId) : Trie.Key<BlogId> {
     return { hash = x; key = x };
+  };
+
+  //Internal cycle management
+  public func acceptCycles() : async () {
+    let available = Cycles.available();
+    let accepted = Cycles.accept(available);
+    assert (accepted == available);
+  };
+
+  public query func availableCycles() : async Nat {
+    return Cycles.balance();
   };
 };

@@ -77,7 +77,10 @@ function App() {
       });
 
       const posts = [].concat.apply([], postsList);
-      posts.reverse();
+      posts.sort((a, b) => {
+        return b.id - a.id;
+      });
+
       setPosts(posts);
     } catch (e) {
       console.log(e);
@@ -128,7 +131,7 @@ function App() {
         </a>
       </p>
       <Route path="/">
-        <h1>Sign the guestbook!</h1>
+        <h1>Sign the IC guestbook!</h1>
         <form onSubmit={createPost}>
           <div style={{ borderRadius: '5px', padding: '0.5em', boxShadow: '-5px -5px 0px #b8b3e9' }}>
           <table style={{ width: "100%" }}>
