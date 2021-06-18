@@ -61,6 +61,8 @@ function App() {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [_, setLocation] = useLocation();
+  const [cycles, setCycles] = useState(0);
+  const [postsTodayCount, setPostsTodayCount] = useState(0);
 
   const refreshPosts = useCallback(async () => {
     try {
@@ -81,6 +83,12 @@ function App() {
         return b.id - a.id;
       });
 
+      const startOfDay = new Date();
+      startOfDay.setHours(0,0,0,0);
+
+      const postsForToday = posts.filter((post) => Number(post.timestamp.toString()) > startOfDay.getTime());
+
+      setPostsTodayCount(postsForToday.length);
       setPosts(posts);
     } catch (e) {
       console.log(e);
@@ -117,6 +125,13 @@ function App() {
 
   useEffect(() => {
     refreshPosts();
+
+    const updateCycles = async () => {
+      const cycles = await blog.availableCycles();  
+      setCycles(cycles);
+    }
+
+    updateCycles();
   }, []);
 
   return (
@@ -130,6 +145,15 @@ function App() {
           />
         </a>
       </p>
+      <div className="stats">
+          <marquee>
+            All time posts: {posts.length}
+            {' '}|{' '}
+            Posts today: {postsTodayCount}
+            {' '}|{' '}
+            Remaining cycles: {cycles.toString()}
+          </marquee>
+        </div>
       <Route path="/">
         <h1>Sign the IC guestbook!</h1>
         <form onSubmit={createPost}>

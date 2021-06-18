@@ -2,6 +2,19 @@
   box-sizing: border-box;
 }
 
+.stats {
+  font-size: 24px;
+  position: fixed;
+  z-index: 999;
+  height: 40px;
+  width: 100%;
+  background-color: greenyellow;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
 html {
   font-family: Times New Roman, Georgia, serif, Apple Color Emoji, Segoe UI Emoji;
   font-size: 14px;
