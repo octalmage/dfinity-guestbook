@@ -15,6 +15,10 @@ actor {
 
   private stable var next : BlogId = 0;
 
+  private stable var praises : Trie.Trie<BlogId, Nat32> = Trie.empty();
+
+  private stable var poops : Trie.Trie<BlogId, Nat32> = Trie.empty();
+
   // The blogs data store.
   private stable var blogs : Trie.Trie<BlogId, Blog> = Trie.empty();
 
@@ -37,6 +41,22 @@ actor {
     return blogId;
   };
 
+  public func createPraise(blogId: BlogId) : async BlogId {
+    var praisesForTheBlog = Trie.find(praises, key(blogId), eq);
+    if (Option.isNull(praisesForTheBlog)) {
+      praisesForTheBlog = Option.make(0);
+    };
+
+    // praisesForTheBlog = ?praisesForTheBlog + 1;
+    praises := Trie.replace(
+      praises,
+      key(blogId),
+      eq,
+      ?praisesForTheBlog
+    ).0;
+    return blogId;
+  };
+
   public query func read(blogId : BlogId) : async ?Blog {
     let result = Trie.find(blogs, key(blogId), eq);
     return result;
@@ -44,6 +64,14 @@ actor {
 
   public query func readAll() : async Trie.Trie<BlogId, Blog>  {
     return blogs;
+  };
+
+  public query func readAllPraises() : async Trie.Trie<BlogId, Nat32>  {
+    return praises;
+  };
+
+  public query func readAllPoops() : async Trie.Trie<BlogId, Nat32>  {
+    return poops;
   };
 
    private func eq(x : BlogId, y : BlogId) : Bool {

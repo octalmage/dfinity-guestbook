@@ -42,6 +42,8 @@ const Comment = ({ author, timestamp, id, body }) => (
     <p>
       <Link to={`/post/${id}`}>{convertToDate(timestamp)}</Link>
     </p>
+    <button>✌️</button>
+    <button>💩</button>
   </div>
 );
 
@@ -127,7 +129,7 @@ function App() {
     refreshPosts();
 
     const updateCycles = async () => {
-      const cycles = await blog.availableCycles();  
+      const cycles = await blog.availableCycles();
       setCycles(cycles);
     }
 
@@ -193,7 +195,7 @@ function App() {
               </td>
             </tr>
           </table>
-          
+
           <button disabled={isLoading} type="submit">
             Submit
           </button>
