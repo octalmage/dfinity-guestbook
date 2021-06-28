@@ -35,18 +35,6 @@ const convertToDate = (d) => {
   );
 };
 
-const Comment = ({ author, timestamp, id, body }) => (
-  <div className="comment">
-    <p>{author} says:</p>
-    <p>{body}</p>
-    <p>
-      <Link to={`/post/${id}`}>{convertToDate(timestamp)}</Link>
-    </p>
-    <button>✌️</button>
-    <button>💩</button>
-  </div>
-);
-
 function findAllByKey(obj, keyToFind) {
   return Object.entries(obj)
     .reduce((acc, [key, value]) => (key === keyToFind)
@@ -57,10 +45,24 @@ function findAllByKey(obj, keyToFind) {
     , [])
 }
 
+const Comment = ({ author, timestamp, id, body, onPraise, praiseCount }) => (
+  <div className="comment">
+    <p>{author} says:</p>
+    <p>{body}</p>
+    <p>
+      <Link to={`/post/${id}`}>{convertToDate(timestamp)}</Link>
+    </p>
+    {praiseCount}
+    <button onClick={onPraise}>✌️</button>
+    <button>💩</button>
+  </div>
+);
+
 function App() {
   const [body, setBody] = useState("");
   const [author, setAuthor] = useState("");
   const [posts, setPosts] = useState([]);
+  const [praises, setPraises] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [_, setLocation] = useLocation();
   const [cycles, setCycles] = useState(0);
@@ -97,6 +99,28 @@ function App() {
     }
   }, []);
 
+  const refreshReactions = useCallback(async () => {
+    try {
+      const response = (await blog.readAllPraises());
+
+      const valuesList = findAllByKey(response, 'leaf');
+
+      const praisesList = valuesList.map(v => v.keyvals).map((values) => {
+        return fromList(values).map((a) => {
+          return a[1];
+
+        });
+      });
+
+      const praises = [].concat.apply([], praisesList);
+      setPraises(praises);
+
+      console.log(praises);
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
+
   const createPost = useCallback(
     async (event) => {
       event.preventDefault();
@@ -125,8 +149,24 @@ function App() {
     [body, author]
   );
 
+
+  const createPraise = useCallback(
+    async (blogId) => {
+      event.preventDefault();
+      setIsLoading(true);
+
+      await blog.createPraise(blogId);
+
+      await refreshReactions();
+
+      setIsLoading(false);
+    },
+    []
+  );
+
   useEffect(() => {
     refreshPosts();
+    refreshReactions();
 
     const updateCycles = async () => {
       const cycles = await blog.availableCycles();
@@ -202,7 +242,11 @@ function App() {
           </div>
         </form>
         {posts.map((post) => (
-          <Comment key={post.id} {...post} />
+          <Comment 
+            onPraise={() => createPraise(post.id)} 
+            key={post.id} {...post} 
+            praiseCount={praises[post.id]}
+          />
         ))}
       </Route>
       <Route path="/post/:id">

@@ -1,5 +1,6 @@
 import List "mo:base/List";
 import Option "mo:base/Option";
+import Nat32 "mo:base/Nat32";
 import Trie "mo:base/Trie";
 import Time "mo:base/Time";
 import Cycles "mo:base/ExperimentalCycles";
@@ -44,15 +45,31 @@ actor {
   public func createPraise(blogId: BlogId) : async BlogId {
     var praisesForTheBlog = Trie.find(praises, key(blogId), eq);
     if (Option.isNull(praisesForTheBlog)) {
-      praisesForTheBlog = Option.make(0);
+      praisesForTheBlog := Option.make<Nat32>(0);
     };
 
-    // praisesForTheBlog = ?praisesForTheBlog + 1;
+    praisesForTheBlog := Option.make<Nat32>(Nat32.add(Option.unwrap(praisesForTheBlog), 1));
     praises := Trie.replace(
       praises,
       key(blogId),
       eq,
-      ?praisesForTheBlog
+      praisesForTheBlog
+    ).0;
+    return blogId;
+  };
+
+  public func createPoop(blogId: BlogId) : async BlogId {
+    var poopsForTheBlog = Trie.find(praises, key(blogId), eq);
+    if (Option.isNull(poopsForTheBlog)) {
+      poopsForTheBlog := Option.make<Nat32>(0);
+    };
+
+    poopsForTheBlog := Option.make<Nat32>(Nat32.add(Option.unwrap(poopsForTheBlog), 1));
+    poops := Trie.replace(
+      poops,
+      key(blogId),
+      eq,
+      poopsForTheBlog
     ).0;
     return blogId;
   };
