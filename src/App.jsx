@@ -194,6 +194,8 @@ function App() {
             Posts today: {postsTodayCount}
             {' '}|{' '}
             Remaining cycles: {cycles.toString()}
+            {' '}|{' '}
+            <a target="_blank" href="https://github.com/octalmage/dfinity-guestbook">GitHub</a>
           </marquee>
         </div>
       <Route path="/">
