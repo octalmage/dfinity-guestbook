@@ -2,7 +2,7 @@ import { Actor, HttpAgent } from "@dfinity/agent"
 import { idlFactory as counter_idl, canisterId as counter_id } from "dfx-generated/blog"
 
 const agentOptions = {
-  host: "http://localhost:8000",
+  host: "https://ic0.app",
 }
 
 const agent = new HttpAgent(agentOptions)

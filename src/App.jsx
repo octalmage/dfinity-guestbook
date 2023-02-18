@@ -52,9 +52,9 @@ const Comment = ({ author, timestamp, id, body, onPraise, praiseCount }) => (
     <p>
       <Link to={`/post/${id}`}>{convertToDate(timestamp)}</Link>
     </p>
-    {praiseCount}
+    {/* {praiseCount}
     <button onClick={onPraise}>✌️</button>
-    <button>💩</button>
+    <button>💩</button> */}
   </div>
 );
 
@@ -99,27 +99,27 @@ function App() {
     }
   }, []);
 
-  const refreshReactions = useCallback(async () => {
-    try {
-      const response = (await blog.readAllPraises());
+  // const refreshReactions = useCallback(async () => {
+  //   try {
+  //     const response = (await blog.readAllPraises());
 
-      const valuesList = findAllByKey(response, 'leaf');
+  //     const valuesList = findAllByKey(response, 'leaf');
 
-      const praisesList = valuesList.map(v => v.keyvals).map((values) => {
-        return fromList(values).map((a) => {
-          return a[1];
+  //     const praisesList = valuesList.map(v => v.keyvals).map((values) => {
+  //       return fromList(values).map((a) => {
+  //         return a[1];
 
-        });
-      });
+  //       });
+  //     });
 
-      const praises = [].concat.apply([], praisesList);
-      setPraises(praises);
+  //     const praises = [].concat.apply([], praisesList);
+  //     setPraises(praises);
 
-      console.log(praises);
-    } catch (e) {
-      console.log(e);
-    }
-  }, []);
+  //     console.log(praises);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }, []);
 
   const createPost = useCallback(
     async (event) => {
@@ -150,23 +150,23 @@ function App() {
   );
 
 
-  const createPraise = useCallback(
-    async (blogId) => {
-      event.preventDefault();
-      setIsLoading(true);
+  // const createPraise = useCallback(
+  //   async (blogId) => {
+  //     event.preventDefault();
+  //     setIsLoading(true);
 
-      await blog.createPraise(blogId);
+  //     await blog.createPraise(blogId);
 
-      await refreshReactions();
+  //     await refreshReactions();
 
-      setIsLoading(false);
-    },
-    []
-  );
+  //     setIsLoading(false);
+  //   },
+  //   []
+  // );
 
   useEffect(() => {
     refreshPosts();
-    refreshReactions();
+    // refreshReactions();
 
     const updateCycles = async () => {
       const cycles = await blog.availableCycles();

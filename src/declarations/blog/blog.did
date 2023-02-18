@@ -1,0 +1,90 @@
+type Trie_1 = 
+ variant {
+   branch: Branch_1;
+   "empty";
+   leaf: Leaf_1;
+ };
+type Trie = 
+ variant {
+   branch: Branch;
+   "empty";
+   leaf: Leaf;
+ };
+type List_1 = 
+ opt record {
+       record {
+         Key;
+         Blog;
+       };
+       List_1;
+     };
+type List = 
+ opt record {
+       record {
+         Key;
+         nat32;
+       };
+       List;
+     };
+type Leaf_1 = 
+ record {
+   keyvals: AssocList_1;
+   size: nat;
+ };
+type Leaf = 
+ record {
+   keyvals: AssocList;
+   size: nat;
+ };
+type Key = 
+ record {
+   hash: Hash;
+   key: BlogId;
+ };
+type Hash = nat32;
+type Branch_1 = 
+ record {
+   left: Trie_1;
+   right: Trie_1;
+   size: nat;
+ };
+type Branch = 
+ record {
+   left: Trie;
+   right: Trie;
+   size: nat;
+ };
+type BlogId = nat32;
+type Blog = 
+ record {
+   author: text;
+   body: text;
+   timestamp: int;
+ };
+type AssocList_1 = 
+ opt record {
+       record {
+         Key;
+         Blog;
+       };
+       List_1;
+     };
+type AssocList = 
+ opt record {
+       record {
+         Key;
+         nat32;
+       };
+       List;
+     };
+service : {
+  acceptCycles: () -> ();
+  availableCycles: () -> (nat) query;
+  create: (Blog) -> (BlogId);
+  createPoop: (BlogId) -> (BlogId);
+  createPraise: (BlogId) -> (BlogId);
+  read: (BlogId) -> (opt Blog) query;
+  readAll: () -> (Trie_1) query;
+  readAllPoops: () -> (Trie) query;
+  readAllPraises: () -> (Trie) query;
+}
