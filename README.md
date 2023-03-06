@@ -1,6 +1,6 @@
-# DFINITY Guestbook
+# Internet Computer Guestbook
 
-A retro 90's style Web3.0 guestbook built on [DFINITY](https://dfinity.org/).
+A retro 90's style Web3.0 guestbook built on [Internet Computer](https://dfinity.org/).
 
 ## Requirements
 
